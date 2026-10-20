@@ -1,0 +1,44 @@
+{
+  "name": "datacheck-mcp",
+  "version": "1.1.0",
+  "description": "Give AI agents the ability to check whether data is actually correct — duplicate keys, impossible dates, silent nulls, rows that would be lost.",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "data-quality",
+    "data-validation",
+    "csv",
+    "ai-agent",
+    "llm",
+    "data-checking"
+  ],
+  "license": "MIT",
+  "author": "ContentForge",
+  "homepage": "https://github.com/contentforge-press/datacheck-mcp",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/contentforge-press/datacheck-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/contentforge-press/datacheck-mcp/issues"
+  },
+  "main": "index.js",
+  "bin": {
+    "datacheck-mcp": "index.js"
+  },
+  "files": [
+    "index.js",
+    "server.py",
+    "core/validator.py",
+    "core/selling.py",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ]
+}
