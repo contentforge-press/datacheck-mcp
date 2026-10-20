@@ -19,12 +19,18 @@ import os
 import sys
 
 # 导入共享内核
+# 包内结构: server.py 和 core/validator.py 同级
+_here = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(_here, "core"))
+from validator import to_dict, to_markdown, validate
+
+# 销售引擎
 try:
-    from dvq_core.validator import to_dict, to_markdown, validate
+    from selling import (License, check_usage, resolve_license,
+                         upsell_text)
+    HAVE_SELLING = True
 except ImportError:
-    _here = os.path.dirname(os.path.abspath(__file__))
-    sys.path.insert(0, os.path.join(_here, "..", "core"))
-    from validator import to_dict, to_markdown, validate
+    HAVE_SELLING = False
 
 
 SERVER_NAME = "dvq"
@@ -114,8 +120,24 @@ TOOLS = [
 # ============================================================
 def tool_validate_csv(args):
     from validator import validate as _v
+
+    csv_text = args["csv"]
+    row_count = csv_text.count("\n")
+
+    # 销售引擎：许可 + 用量检查
+    if HAVE_SELLING:
+        lic = resolve_license()
+        usage = check_usage(lic, "mcp", row_count)
+        if not usage.allowed:
+            return {
+                "error": usage.reason,
+                "message": usage.upsell_message,
+                "upgrade": usage.checkout,
+                "rows": row_count,
+            }
+
     res = _v(
-        args["csv"],
+        csv_text,
         key_column=args.get("key_column"),
         required_columns=args.get("required_columns") or [],
     )
